@@ -5,11 +5,11 @@
 	<key>Kind</key>
 	<string>Xcode.Xcode3.ProjectTemplateUnitKind</string>
 	<key>Identifier</key>
-	<string>com.floriandenis.opencvosxcli</string>
+	<string>com.apple.dt.unit.commandLineTool</string>
 	<key>Concrete</key>
 	<true/>
 	<key>Description</key>
-	<string>This template creates a starting point for an OS X CLI tool using OpenCV.</string>
+	<string>This template creates a starting point for an OS X CLI tool using OpenCV with CUDA support.</string>
 	<key>Ancestors</key>
 	<array>
 		<string>com.apple.dt.unit.base</string>
@@ -17,30 +17,40 @@
 	</array>
 	<key>Targets</key>
 	<array>
-		<dict>
-			<key>ProductType</key>
-			<string>com.apple.product-type.tool</string>
-			<key>BuildPhases</key>
-			<array>
-				<dict>
-					<key>Class</key>
-					<string>Sources</string>
-				</dict>
-				<dict>
-					<key>Class</key>
-					<string>Frameworks</string>
-				</dict>
-			</array>
-            <key>Configurations</key> 
+	  <dict>
+	    <key>ProductType</key>
+	    <string>com.apple.product-type.tool</string>
+	    <key>BuildPhases</key>
+	    <array>
+	    	<dict>
+	    		<key>Class</key>
+	    		<string>Sources</string>
+	    	</dict>
+	    	<dict>
+	    		<key>Class</key>
+	    		<string>Frameworks</string>
+	    	</dict>
+	    	<dict>
+	    		<key>Class</key>
+	    		<string>CopyFiles</string>
+	    		<key>DstPath</key>
+	    		<string>/usr/share/man/man1/</string>
+	    		<key>DstSubfolderSpec</key>
+	    		<string>0</string>
+	    		<key>RunOnlyForDeploymentPostprocessing</key>
+	    		<string>YES</string>
+	    	</dict>
+	    </array>
+            <key>Configurations</key>
             <dict>
                 <key>Debug</key>
                 <dict>
                     <key>HEADER_SEARCH_PATHS</key>
-                    <string>$(inherited) /usr/local/include</string>                    
+                    <string>$(inherited) /usr/local/include /usr/local/cuda/include</string>
                     <key>LIBRARY_SEARCH_PATHS</key>
                     <string>/usr/local/lib</string>
                     <key>OTHER_LDFLAGS</key>
-                    <string>-lopencv_core -lopencv_highgui -lopencv_imgproc</string>
+                    <string>-lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_gpu</string>
                     <key>CLANG_CXX_LIBRARY</key>
                     <string>libstdc++</string>
                 </dict>
@@ -55,8 +65,8 @@
                     <key>CLANG_CXX_LIBRARY</key>
                     <string>libstdc++</string>
                 </dict>
-            </dict>        
-		</dict>
+            </dict>
+          </dict>
 	</array>
 	<key>Options</key>
 	<array>
@@ -84,16 +94,27 @@
 					<key>Definitions</key>
 					<dict>
 						<key>main.cpp:include</key>
-						<string>#include &lt;opencv2/core/core.hpp&gt;
+						<string> #include &lt;stdio.h&gt;
+#include &lt;iostream&gt;
+
+#include &lt;opencv2/gpu/gpu.hpp&gt;
+#include &lt;opencv2/core/core.hpp&gt;
 #include &lt;opencv2/highgui/highgui.hpp&gt;
 #include &lt;opencv2/imgproc/imgproc.hpp&gt;
+
+using namespace cv;
+using namespace cv::gpu;
+
 </string>
 						<key>main.cpp:main:content</key>
 						<string>// insert code here...
-cv::Mat J, I = cv::imread("/System/Library/CoreServices/DefaultDesktop.jpg");
-cv::resize(I,J,cv::Size(640,480));
-cv::imshow("J",J);
-cv::waitKey();
+std::cout &lt;&lt; &quot;Hello, World!\n&quot;;
+std::cout &lt;&lt; &quot;Number of GPUs detected:&quot; &lt;&lt; getCudaEnabledDeviceCount() &lt;&lt; &quot;\n&quot;;
+
+Mat J, I = imread("/System/Library/CoreServices/DefaultDesktop.jpg");
+resize(I,J,Size(640,480));
+imshow("J",J);
+waitKey();
 </string>
 					</dict>
 				</dict>
@@ -118,4 +139,3 @@ cv::waitKey();
 	</dict>
 </dict>
 </plist>
-	
